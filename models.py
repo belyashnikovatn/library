@@ -28,6 +28,15 @@ class Book():
 
         Book.library.append(self)
 
+    def _get_by_id(id):
+        """Find a book by id."""
+        return [book for book in Book.library if book.id == id]
+
+    def delete(id):
+        """Delete a book by id."""
+        book = Book._get_by_id(id)
+        Book.library.remove(book)
+
     @classmethod
     def get_all(cls):
         """Return a list of all books."""
@@ -43,4 +52,7 @@ class Book():
 
 book = Book(1, 'Сказки', 'Гоголь', 1952)
 book = Book(2, 'Роман', 'Толстой', 1934)
+book = Book(3, 'Стихи', 'Пушкин', 1934)
+[print(book) for book in Book.get_all()]
+Book.delete(2)
 [print(book) for book in Book.get_all()]
