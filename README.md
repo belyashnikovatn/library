@@ -1,2 +1,16 @@
-# library
-library management system: get all books, add, delete, update, find by author, title, year
+# Библиотека
+Система управления библиотекой: каждой книге своё место!  
+
+Функционал:
+- хранение книг
+- список книг с возможностью сортировки
+- поиск по автору, наименованию, году
+- добавление книги / удаление по уникальному номеру
+- смена статуса ("в наличии", "выдана")
+
+Установка:
+$ git clone https://github.com/belyashnikovatn/library.git
+$ python main.py
+
+Стек:
+python 3.9
