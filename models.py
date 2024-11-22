@@ -108,9 +108,16 @@ print('-------------')
 Book.get_all_by_param(author='Гоголь')
 Book.get_all_by_param(author='Г1231оголь')
 
-# test_book = Book()
-# def some_function(value: str):
-#     return getattr(Book, value)
+test_book = Book('SinnSongs', 'People', 1212)
 
 
-# print(some_function(""))
+def some_function(value: str):
+    try:
+        value_atr = getattr(test_book, value)
+        print (value_atr)
+    except AttributeError as e:
+        print(f'This is {e} error')
+
+
+some_function("title")
+some_function("title123")
