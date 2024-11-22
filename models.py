@@ -1,46 +1,87 @@
 """All CRUD-operations for books."""
 
+from datetime import datetime as dt
 from enum import Enum
+from typing import Type, Union
 
 
 class BookStatus(Enum):
-    """Desc."""
+    """Status scheme for books."""
 
     IN_STOCK = 'в наличии'
     ABSENT = 'выдана'
 
 
-class Book():
+class Book:
     """Book class."""
 
     library: list[object] = []
 
     def __init__(
-            self, id: int, title: str, author: str, year: int,
+            self, title: str, author: str, year: int,
+            id: int = None,
             status: BookStatus = BookStatus.IN_STOCK
     ) -> None:
-        """Initialize a book and add into library."""
-        self.id = id
+        """Initialize a book and add into the library."""
         self.title = title
         self.author = author
         self.year = year
         self.status = status
-
+        if id:
+            self.id = id
+        else:
+            self.id = Book._get_next_id()
         Book.library.append(self)
-
-    def _get_by_id(id):
-        """Find a book by id."""
-        return [book for book in Book.library if book.id == id]
-
-    def delete(id):
-        """Delete a book by id."""
-        book = Book._get_by_id(id)
-        Book.library.remove(book)
+        print(f'Книга {self.title} успешно добавлена!')
 
     @classmethod
-    def get_all(cls):
-        """Return a list of all books."""
-        return [book for book in Book.library]
+    def _get_next_id(cls) -> int:
+        """Internal method: find max id and return next."""
+        if not Book.library:
+            return 1
+        return max([book.id for book in Book.library]) + 1
+
+    @classmethod
+    def _get_by_id(cls, id) -> Union[object, None]:
+        """Internal method: find a book by id."""
+        if result := [book for book in Book.library if book.id == id]:
+            return result[0]
+        return None
+
+    @classmethod
+    def get_all(cls) -> None:
+        """Return a list of all books or None."""
+        if result := [book for book in Book.library]:
+            [print(book) for book in result]
+        else:
+            print('Библиотека пустая. Сначала добавьте в неё что-нибудь.')
+
+    @classmethod
+    def delete(cls, id):
+        """Delete a book by id."""
+        book = Book._get_by_id(id)
+        if book:
+            Book.library.remove(book)
+            print(f'Книга под номером {id} удалена.')
+        else:
+            print(f'Нет книги под номером {id}.')
+
+    @classmethod
+    def get_all_by_param(
+        # self, atr, text
+        cls, author: str = '', title: str = '',
+        year: int = dt.now().year
+    ):
+        """Return a list of all books by parameters."""
+        if author:
+            result = [book for book in Book.library if book.author.lower() == author.lower()]
+        if result:
+            print(f'Реузльтаты поиска по {author}')
+            [print(book) for book in result]
+        else:
+            print(
+                f'По запросу {author} ничего не найдено'
+                '. Попробуйте по-другому')
 
     def __str__(self):
         """Return full description of a book."""
@@ -50,9 +91,33 @@ class Book():
             f'{self.year} года выпуска сейчас {self.status.value}')
 
 
-book = Book(1, 'Сказки', 'Гоголь', 1952)
-book = Book(2, 'Роман', 'Толстой', 1934)
-book = Book(3, 'Стихи', 'Пушкин', 1934)
-[print(book) for book in Book.get_all()]
+Book.get_all()
+Book('Сказки', 'Гоголь', 1952)
+Book('Роман', 'Толстой', 1934)
+Book('Стихи', 'Пушкин', 1934)
+
+Book.get_all()
 Book.delete(2)
-[print(book) for book in Book.get_all()]
+Book.get_all()
+Book.delete(6)
+
+Book('Поэма', 'Блок', 1917)
+
+Book.get_all()
+print('-------------')
+Book.get_all_by_param(author='Гоголь')
+Book.get_all_by_param(author='Г1231оголь')
+
+test_book = Book('SinnSongs', 'People', 1212)
+
+
+def some_function(value: str):
+    try:
+        value_atr = getattr(test_book, value)
+        print (value_atr)
+    except AttributeError as e:
+        print(f'This is {e} error')
+
+
+some_function("title")
+some_function("title123")
