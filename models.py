@@ -1,6 +1,8 @@
 """All CRUD-operations for books."""
 
+from datetime import datetime as dt
 from enum import Enum
+from typing import Type, Union
 
 
 class BookStatus(Enum):
@@ -10,47 +12,76 @@ class BookStatus(Enum):
     ABSENT = 'выдана'
 
 
-class Book():
+class Book:
     """Book class."""
 
     library: list[object] = []
 
     def __init__(
             self, title: str, author: str, year: int,
-            id: int = 0,
+            id: int = None,
             status: BookStatus = BookStatus.IN_STOCK
     ) -> None:
         """Initialize a book and add into the library."""
-        self.id = Book._get_next_id()
         self.title = title
         self.author = author
         self.year = year
         self.status = status
-
+        if id:
+            self.id = id
+        else:
+            self.id = Book._get_next_id()
         Book.library.append(self)
+        print(f'Книга {self.title} успешно добавлена!')
 
     @classmethod
-    def _get_next_id(cls):
-        """Find max id and return next."""
+    def _get_next_id(cls) -> int:
+        """Internal method: find max id and return next."""
         if not Book.library:
             return 1
         return max([book.id for book in Book.library]) + 1
 
     @classmethod
-    def get_all(cls):
-        """Return a list of all books."""
-        return [book for book in Book.library]
+    def _get_by_id(cls, id) -> Union[object, None]:
+        """Internal method: find a book by id."""
+        if result := [book for book in Book.library if book.id == id]:
+            return result[0]
+        return None
 
     @classmethod
-    def _get_by_id(cls, id):
-        """Internal method: find a book by id."""
-        return [book for book in Book.library if book.id == id][0]
+    def get_all(cls) -> None:
+        """Return a list of all books or None."""
+        if result := [book for book in Book.library]:
+            [print(book) for book in result]
+        else:
+            print('Библиотека пустая. Сначала добавьте в неё что-нибудь.')
 
     @classmethod
     def delete(cls, id):
         """Delete a book by id."""
         book = Book._get_by_id(id)
-        Book.library.remove(book)
+        if book:
+            Book.library.remove(book)
+            print(f'Книга под номером {id} удалена.')
+        else:
+            print(f'Нет книги под номером {id}.')
+
+    @classmethod
+    def get_all_by_param(
+        # self, atr, text
+        cls, author: str = '', title: str = '',
+        year: int = dt.now().year
+    ):
+        """Return a list of all books by parameters."""
+        if author:
+            result = [book for book in Book.library if book.author.lower() == author.lower()]
+        if result:
+            print(f'Реузльтаты поиска по {author}')
+            [print(book) for book in result]
+        else:
+            print(
+                f'По запросу {author} ничего не найдено'
+                '. Попробуйте по-другому')
 
     def __str__(self):
         """Return full description of a book."""
@@ -60,17 +91,26 @@ class Book():
             f'{self.year} года выпуска сейчас {self.status.value}')
 
 
-book = Book('Сказки', 'Гоголь', 1952)
-book = Book('Роман', 'Толстой', 1934)
-book = Book('Стихи', 'Пушкин', 1934)
-book = Book('Поэма', 'Блок', 1917)
+Book.get_all()
+Book('Сказки', 'Гоголь', 1952)
+Book('Роман', 'Толстой', 1934)
+Book('Стихи', 'Пушкин', 1934)
 
-[print(book) for book in Book.get_all()]
-
-# found = Book.get_by_id(2)
-# found = Book.get_by_id(1)
-# print(found)
-print('==============')
+Book.get_all()
 Book.delete(2)
-[print(book) for book in Book.get_all()]
+Book.get_all()
+Book.delete(6)
 
+Book('Поэма', 'Блок', 1917)
+
+Book.get_all()
+print('-------------')
+Book.get_all_by_param(author='Гоголь')
+Book.get_all_by_param(author='Г1231оголь')
+
+# test_book = Book()
+# def some_function(value: str):
+#     return getattr(Book, value)
+
+
+# print(some_function(""))
