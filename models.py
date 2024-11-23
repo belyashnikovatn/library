@@ -52,6 +52,7 @@ class Book:
     def get_all(cls) -> None:
         """Return a list of all books or None."""
         if result := [book for book in Book.library]:
+            print(f'Библиотека. Всего  книг: {len(result)}')
             [print(book) for book in result]
         else:
             print('Библиотека пустая. Сначала добавьте в неё что-нибудь.')
@@ -110,9 +111,9 @@ class Book:
 
 
 # Book.get_all()
-# Book('Сказки', 'Гоголь', 1952)
-# Book('Роман', 'Толстой', 1934)
-# Book('Стихи', 'Пушкин', 1934)
+Book('Сказки', 'Гоголь', 1952)
+Book('Роман', 'Толстой', 1934)
+Book('Стихи', 'Пушкин', 1934)
 
 # Book.get_all()
 # Book.delete(2)
