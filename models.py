@@ -15,10 +15,18 @@ class BookStatus(Enum):
 class Book:
     """Book class."""
 
+    # Library: list of books inside of the Book class.
     library: list[object] = []
 
+    # Fields for seraching: you can add more.
+    search_fields = {
+        'автор': 'author',
+        'наименование': 'title',
+        'год': 'year'
+    }
+
     def __init__(
-            self, title: str, author: str, year: int,
+            self, title: str, author: str, year: str,
             id: int = 0,
             status: BookStatus = BookStatus.IN_STOCK
     ) -> None:
@@ -58,7 +66,7 @@ class Book:
             print('Библиотека пустая. Сначала добавьте в неё что-нибудь.')
 
     @classmethod
-    def delete(cls, id):
+    def delete(cls, id: int) -> None:
         """Delete a book by id."""
         book = Book._get_by_id(id)
         if book:
@@ -80,27 +88,30 @@ class Book:
         if status.lower() == book.status.value.lower():
             print(f'У книги под номером {id} уже статус "{status}"')
             return None
-        new_status = [item for item in BookStatus if item.value.lower() == status.lower()][0]
+
+        new_status = [
+            item for item in BookStatus if item.value.lower() == status.lower()
+            ][0]
         book.status = new_status
         print(f'Книга под номером {id} теперь "{book.status.value}"')
 
-
     @classmethod
     def get_all_by_param(
-        # self, atr, text
-        cls, author: str = '', title: str = '',
-        year: int = dt.now().year
-    ):
-        """Return a list of all books by parameters."""
-        if author:
-            result = [book for book in Book.library if book.author.lower() == author.lower()]
-        if result:
-            print(f'Реузльтаты поиска по {author}')
-            [print(book) for book in result]
-        else:
-            print(
-                f'По запросу {author} ничего не найдено'
-                '. Попробуйте по-другому')
+        cls, atr, text
+    ) -> None:
+        """Return a list of all books by parameter."""
+        if atr.lower() not in cls.search_fields:
+            print(f'Поля "{atr}" нет. Попробуйте ещё раз')
+            return None
+        results = [
+            book for book in Book.library
+            if getattr(book, cls.search_fields[atr]).lower() == text.lower()]
+        if not results:
+            print(f'По полю "{atr}" по значению "{text}" ничего не найдено.')
+            return None
+        print(f'Результаты поиска по полю "{atr}" по значению "{text}":')
+        [print(book) for book in results]
+        print('---')
 
     def __str__(self):
         """Return full description of a book."""
@@ -110,12 +121,17 @@ class Book:
             f'{self.year} года выпуска сейчас {self.status.value}')
 
 
-# Book.get_all()
-Book('Сказки', 'Гоголь', 1952)
-Book('Роман', 'Толстой', 1934)
-Book('Стихи', 'Пушкин', 1934)
+# Book('Сказки', 'Гоголь', '1952')
+# Book.get_all_by_param(atr='author', text='test')
+Book.get_all()
+Book('Сказки', 'Гоголь', '1952')
+Book('Роман', 'Толстой', '1934')
+Book('Стихи', 'Пушкин', '1934')
 
-# Book.get_all()
+Book.get_all()
+Book.get_all_by_param(atr='автор', text='test')
+Book.get_all_by_param(atr='год', text='1934')
+Book.get_all_by_param(atr='автор', text='гоголь')
 # Book.delete(2)
 # Book.get_all()
 # Book.delete(6)
@@ -127,11 +143,11 @@ Book('Стихи', 'Пушкин', 1934)
 # Book.get_all_by_param(author='Гоголь')
 # Book.get_all_by_param(author='Г1231оголь')
 
-test_book = Book('SinnSongs', 'People', 1212)
-Book.change_status(1, 'ДРУГОЙ')
-Book.change_status(1, 'в наличии')
-Book.change_status(1, 'ВЫДАНа')
-Book.get_all()
+# test_book = Book('SinnSongs', 'People', 1212)
+# Book.change_status(1, 'ДРУГОЙ')
+# Book.change_status(1, 'в наличии')
+# Book.change_status(1, 'ВЫДАНа')
+# Book.get_all()
 # print([item.value for item in BookStatus])
 # print([item.name for item in BookStatus])
 # def some_function(value: str):
