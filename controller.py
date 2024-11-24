@@ -132,27 +132,36 @@ class Book:
             print('---')
         print('Библиотека пустая. Сначала добавьте в неё что-нибудь.')
 
+    def dump(self) -> tuple:
+        """Return a dict for serializing."""
+        return (self.title, self.author, self.year, self.id, self.status)
+
+    @classmethod
+    def clean(cls) -> None:
+        """Remove all books."""
+        Book.library.clear()
+
     def __str__(self):
         """Return full description of a book."""
         return (
-            f'Книга номер {self.id}: '
-            f'под названием "{self.title}" авторства {self.author}, '
+            f'Книга № {self.id}: '
+            f'под названием "{self.title}" авторства "{self.author}", '
             f'{self.year} года выпуска сейчас {self.status}')
 
 
 # Book('Сказки', 'Гоголь', '1952')
 # Book.get_all_by_param(atr='author', text='test')
-Book.get_all()
-Book('Сказки', 'Гоголь', '1952')
-Book('Роман', 'Толстой', '1934')
-Book('Стихи', 'Пушкин', '1934')
+# Book.get_all()
+# Book('Сказки', 'Гоголь', '1952')
+# Book('Роман', 'Толстой', '1934')
+# Book('Стихи', 'Пушкин', '1934')
 
-Book.get_all()
-Book.sort_by_param('автоывур', 'в')
-Book.sort_by_param('автор', '23123')
-Book.sort_by_param('наименование', 'в')
-Book.sort_by_param('наименование', 'у')
-Book.sort_by_param('автор', 'у')
+# Book.get_all()
+# Book.sort_by_param('автоывур', 'в')
+# Book.sort_by_param('автор', '23123')
+# Book.sort_by_param('наименование', 'в')
+# Book.sort_by_param('наименование', 'у')
+# Book.sort_by_param('автор', 'у')
 # Book.get_all_by_param(atr='автор', text='test')
 # Book.get_all_by_param(atr='год', text='1934')
 # Book.get_all_by_param(atr='автор', text='гоголь')
