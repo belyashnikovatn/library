@@ -1,14 +1,6 @@
 """All CRUD-operations for books."""
 
-# from enum import Enum
 from typing import Union
-
-
-# class BookStatus(Enum):
-#     """Status scheme for books."""
-
-#     IN_STOCK = 'в наличии'
-#     ABSENT = 'выдана'
 
 
 class Book:
@@ -17,7 +9,7 @@ class Book:
     # Library: list of books inside of the Book class.
     library: list[object] = []
 
-    # Book status scheme.
+    # Book status scheme: you can add more.
     statuses = ('в наличии', 'выдана')
 
     # Fields for seraching: you can add more.
@@ -25,6 +17,17 @@ class Book:
         'автор': 'author',
         'наименование': 'title',
         'год': 'year'
+    }
+
+    # Fields for sorting: you can add more:
+    sort_fields = {
+        'автор': 'author',
+        'наименование': 'title'
+    }
+    # Sorting direction:
+    sort_by = {
+        'в': True,
+        'у': False
     }
 
     def __init__(
@@ -53,7 +56,7 @@ class Book:
 
     @classmethod
     def _get_by_id(cls, id) -> Union[object, None]:
-        """Find a book by id."""
+        """Find a book by id and return an instance (or None)."""
         if result := [book for book in Book.library if book.id == id]:
             return result[0]
         return None
@@ -65,8 +68,8 @@ class Book:
         if book:
             Book.library.remove(book)
             print(f'Книга под номером {id} удалена.')
-        else:
-            print(f'Нет книги под номером {id}.')
+            return None
+        print(f'Нет книги под номером {id}.')
 
     @classmethod
     def change_status(cls, id: int, status: str) -> None:
@@ -81,36 +84,48 @@ class Book:
         if status.lower() == book.status.lower():
             print(f'У книги под номером {id} уже статус "{status}"')
             return None
-
         book.status = status.lower()
         print(f'Книга под номером {id} теперь "{book.status}"')
 
     @classmethod
     def get_all(cls) -> None:
-        """Return a list of all books or None."""
-        if result := [book for book in Book.library]:
-            print(f'Библиотека. Всего  книг: {len(result)}')
-            [print(book) for book in result]
-        else:
-            print('Библиотека пустая. Сначала добавьте в неё что-нибудь.')
+        """Print a list of all books."""
+        if results := [book for book in Book.library]:
+            print(f'Библиотека. Всего  книг: {len(results)}')
+            [print(book) for book in results]
+            print('---')
+            return None
+        print('Библиотека пустая. Сначала добавьте в неё что-нибудь.')
 
     @classmethod
-    def get_all_by_param(
+    def search_by_param(
         cls, atr, text
     ) -> None:
-        """Return a list of all books by parameter."""
+        """Print a list of all books by parameter."""
         if atr.lower() not in cls.search_fields:
             print(f'Поля "{atr}" нет. Попробуйте ещё раз')
             return None
-        results = [
-            book for book in Book.library
-            if getattr(book, cls.search_fields[atr]).lower() == text.lower()]
-        if not results:
-            print(f'По полю "{atr}" по значению "{text}" ничего не найдено.')
+        if results := [book for book in Book.library if getattr(book, cls.search_fields[atr]).lower() == text.lower()]:
+            print(f'Результаты поиска по полю "{atr}" по значению "{text}":')
+            [print(book) for book in results]
+            print(f'--- найдено всего {len(results)} ---')
             return None
-        print(f'Результаты поиска по полю "{atr}" по значению "{text}":')
-        [print(book) for book in results]
-        print('---')
+        print(f'По полю "{atr}" по значению "{text}" ничего не найдено.')
+
+    @classmethod
+    def sort_by_param(cls, atr, by) -> None:
+        """Print a list of all books sorted by parameter."""
+        if atr.lower() not in cls.sort_fields:
+            print(f'Поля {atr} нет. Попробуйте ещё раз.')
+            return None
+        if by.lower() not in cls.sort_by:
+            print(f'Аргумента {by} нет. Попробуйте ещё раз.')
+            return None
+        if results := sorted(Book.library, key=lambda x: getattr(x, cls.sort_fields[atr]).lower(), reverse=cls.sort_by[by]):
+            print(f'Книги отсортированы по полю "{atr}" по "{by}":')
+            [print(book) for book in results]
+            print('---')
+        print('Библиотека пустая. Сначала добавьте в неё что-нибудь.')
 
     def __str__(self):
         """Return full description of a book."""
@@ -123,11 +138,16 @@ class Book:
 # Book('Сказки', 'Гоголь', '1952')
 # Book.get_all_by_param(atr='author', text='test')
 Book.get_all()
-# Book('Сказки', 'Гоголь', '1952')
-# Book('Роман', 'Толстой', '1934')
-# Book('Стихи', 'Пушкин', '1934')
+Book('Сказки', 'Гоголь', '1952')
+Book('Роман', 'Толстой', '1934')
+Book('Стихи', 'Пушкин', '1934')
 
-# Book.get_all()
+Book.get_all()
+Book.sort_by_param('автоывур', 'в')
+Book.sort_by_param('автор', '23123')
+Book.sort_by_param('наименование', 'в')
+Book.sort_by_param('наименование', 'у')
+Book.sort_by_param('автор', 'у')
 # Book.get_all_by_param(atr='автор', text='test')
 # Book.get_all_by_param(atr='год', text='1934')
 # Book.get_all_by_param(atr='автор', text='гоголь')
