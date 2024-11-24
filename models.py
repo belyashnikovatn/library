@@ -1,15 +1,14 @@
 """All CRUD-operations for books."""
 
-from datetime import datetime as dt
-from enum import Enum
-from typing import Type, Union
+# from enum import Enum
+from typing import Union
 
 
-class BookStatus(Enum):
-    """Status scheme for books."""
+# class BookStatus(Enum):
+#     """Status scheme for books."""
 
-    IN_STOCK = 'в наличии'
-    ABSENT = 'выдана'
+#     IN_STOCK = 'в наличии'
+#     ABSENT = 'выдана'
 
 
 class Book:
@@ -17,6 +16,9 @@ class Book:
 
     # Library: list of books inside of the Book class.
     library: list[object] = []
+
+    # Book status scheme.
+    statuses = ('в наличии', 'выдана')
 
     # Fields for seraching: you can add more.
     search_fields = {
@@ -28,7 +30,7 @@ class Book:
     def __init__(
             self, title: str, author: str, year: str,
             id: int = 0,
-            status: BookStatus = BookStatus.IN_STOCK
+            status: str = statuses[0]
     ) -> None:
         """Initialize a book and add into the library."""
         self.title = title
@@ -57,15 +59,6 @@ class Book:
         return None
 
     @classmethod
-    def get_all(cls) -> None:
-        """Return a list of all books or None."""
-        if result := [book for book in Book.library]:
-            print(f'Библиотека. Всего  книг: {len(result)}')
-            [print(book) for book in result]
-        else:
-            print('Библиотека пустая. Сначала добавьте в неё что-нибудь.')
-
-    @classmethod
     def delete(cls, id: int) -> None:
         """Delete a book by id."""
         book = Book._get_by_id(id)
@@ -77,23 +70,29 @@ class Book:
 
     @classmethod
     def change_status(cls, id: int, status: str) -> None:
-        """Change a book status."""
+        """Change a book status by id."""
         book = Book._get_by_id(id)
         if not book:
             print(f'Нет книги под номером {id}.')
             return None
-        if not status.lower() in [item.value.lower() for item in BookStatus]:
+        if not status.lower() in cls.statuses:
             print(f'Статуса "{status}" нет.')
             return None
-        if status.lower() == book.status.value.lower():
+        if status.lower() == book.status.lower():
             print(f'У книги под номером {id} уже статус "{status}"')
             return None
 
-        new_status = [
-            item for item in BookStatus if item.value.lower() == status.lower()
-            ][0]
-        book.status = new_status
-        print(f'Книга под номером {id} теперь "{book.status.value}"')
+        book.status = status.lower()
+        print(f'Книга под номером {id} теперь "{book.status}"')
+
+    @classmethod
+    def get_all(cls) -> None:
+        """Return a list of all books or None."""
+        if result := [book for book in Book.library]:
+            print(f'Библиотека. Всего  книг: {len(result)}')
+            [print(book) for book in result]
+        else:
+            print('Библиотека пустая. Сначала добавьте в неё что-нибудь.')
 
     @classmethod
     def get_all_by_param(
@@ -118,20 +117,20 @@ class Book:
         return (
             f'Книга номер {self.id}: '
             f'под названием "{self.title}" авторства {self.author}, '
-            f'{self.year} года выпуска сейчас {self.status.value}')
+            f'{self.year} года выпуска сейчас {self.status}')
 
 
 # Book('Сказки', 'Гоголь', '1952')
 # Book.get_all_by_param(atr='author', text='test')
 Book.get_all()
-Book('Сказки', 'Гоголь', '1952')
-Book('Роман', 'Толстой', '1934')
-Book('Стихи', 'Пушкин', '1934')
+# Book('Сказки', 'Гоголь', '1952')
+# Book('Роман', 'Толстой', '1934')
+# Book('Стихи', 'Пушкин', '1934')
 
-Book.get_all()
-Book.get_all_by_param(atr='автор', text='test')
-Book.get_all_by_param(atr='год', text='1934')
-Book.get_all_by_param(atr='автор', text='гоголь')
+# Book.get_all()
+# Book.get_all_by_param(atr='автор', text='test')
+# Book.get_all_by_param(atr='год', text='1934')
+# Book.get_all_by_param(atr='автор', text='гоголь')
 # Book.delete(2)
 # Book.get_all()
 # Book.delete(6)
