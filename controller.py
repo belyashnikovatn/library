@@ -50,7 +50,6 @@ class Book:
         else:
             self.id = Book._get_next_id()
         Book.library.append(self)
-        # print(f'Книга {self.title} успешно добавлена!')
 
     @classmethod
     def _get_next_id(cls) -> int:

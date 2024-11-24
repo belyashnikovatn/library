@@ -8,10 +8,10 @@ from pathlib import Path
 import json
 from typing import Union
 
-from settings import logging
+from settings import logging, STORAGE
 
 
-def save_json(file_name: str, books: list[object]) -> None:
+def save_json(books: list[object], file_name: str = STORAGE) -> None:
     """Serialize and save data into json file."""
     data = json.dumps([book.dump() for book in books], indent=4)
     try:
@@ -23,9 +23,10 @@ def save_json(file_name: str, books: list[object]) -> None:
         return None
 
 
-def load_data(file_name) -> Union[list[list], None]:
+def load_data(file_name: str = STORAGE) -> Union[list[list], None]:
     """Open file and deserialize data."""
     if not Path(file_name).is_file():
+        logging.debug(f'Файл {STORAGE} не существует')
         return None
     try:
         with open(file_name, 'r') as file:
