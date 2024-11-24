@@ -1,4 +1,8 @@
-"""Model layer: serialize and deserialize data, load/save into file."""
+"""
+Model layer.
+
+Serialize and deserialize data, load/save into file.
+"""
 
 import json
 from typing import Union

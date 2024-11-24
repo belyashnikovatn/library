@@ -1,4 +1,9 @@
-"""All CRUD-operations for books."""
+"""
+Controller layer.
+
+All CRUD operations for books: add, delete, change a status, get a list;
+additional: search by parameters, sort by parameters.
+"""
 
 from typing import Union
 
