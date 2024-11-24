@@ -11,8 +11,13 @@ from model import load_data, save_json
 # Book.get_all()
 # save_json('storage.json', Book.library)
 # Book.clean()
-Book.get_all()
-result = load_data('storage.json')
+# Book.get_all()
+# result = load_data('storage.json')
+# if result:
+    # [Book(*book) for book in result]
+    # Book.get_all()
+# else:
+    # print('That case')
+    # Book.get_all()
+    
 # print(result)
-[Book(*book) for book in result]
-Book.get_all()
