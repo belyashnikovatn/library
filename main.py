@@ -1,6 +1,5 @@
 """View."""
 
-
 from controller import Book
 from model import load_data, save_json
 
@@ -15,5 +14,5 @@ from model import load_data, save_json
 Book.get_all()
 result = load_data('storage.json')
 # print(result)
-[Book(*dict_book) for dict_book in result]
+[Book(*book) for book in result]
 Book.get_all()
