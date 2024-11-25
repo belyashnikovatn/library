@@ -4,10 +4,14 @@ Interface level.
 Menus for actions: user pick a menu, make an action, see results.
 """
 
-
 from controller import Book
 from model import save_json
-from settings import MAX_YEAR, MIN_YEAR
+from settings import AUTHOR_ALLOW, MAX_YEAR, MIN_YEAR
+
+
+def check_value(pattern: list, value: str) -> bool:
+    """Check input value."""
+    return all([item.lower() in pattern for item in value])
 
 
 def check_menu(menu: dict) -> str:
@@ -45,7 +49,11 @@ def get_list() -> None:
 
 def add_book() -> None:
     """Check inputs & add a book."""
-    author = input('Введите автора: ')
+    while True:
+        author = input('Введите автора: ')
+        if check_value(AUTHOR_ALLOW, author):
+            break
+        print('Допустимы только буквы и знаки .,-')
     title = input('Введите наименование: ')
     while True:
         year = input('Введите год: ')
@@ -58,25 +66,39 @@ def add_book() -> None:
 
 
 def edit_book():
-    id = int(input('Введите номер книги: '))
+    """Check input type and edit a book."""
+    while True:
+        id = input('Введите номер книги: ')
+        if id.isnumeric():
+            id = int(id)
+            break
+        print('Введите число!')
     status = input(
         f'Введите статус из возможных: {", ".join(Book.statuses)}: '
     )
     Book.change_status(id, status)
 
 
-def del_book():
-    id = int(input('Введите номер книги: '))
+def del_book() -> None:
+    """Check input type and delete a book."""
+    while True:
+        id = input('Введите номер книги: ')
+        if id.isnumeric():
+            id = int(id)
+            break
+        print('Введите число!')
     Book.delete(id)
 
 
-def search_book():
+def search_book() -> None:
+    """Search books by parameters."""
     atr = input(f'Введите поле для поиска [{", ".join(Book.search_fields)}]: ')
-    text = input('Введите текст поиска (например "Пушкин", "выдана", "2005"): ')
+    text = input('Что ищем? (например "Пушкин", "выдана", "2005"): ')
     Book.search_by_param(atr, text)
 
 
-def sort_book():
+def sort_book() -> None:
+    """Sort books by parameters."""
     atr = input(f'Введите поле сортировки [{", ".join(Book.sort_fields)}]: ')
     by = input(f'По возрастанию или убыванию: {", ".join(Book.sort_by)}: ')
     Book.sort_by_param(atr, by)
