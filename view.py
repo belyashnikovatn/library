@@ -11,7 +11,10 @@ from model import save_json
 def check_menu(menu: dict) -> str:
     """Check if user's picked a item of a menu."""
     while True:
-        [print(f'{item[0]} -> {item[1]}') for item in menu.items()]
+        [print(f'{item[0]} -> {item[1]}', end=' | ') for index, item in enumerate(menu.items()) if index < len(menu) // 2]
+        print()
+        [print(f'{item[0]} -> {item[1]}', end=' | ') for index, item in enumerate(menu.items()) if index >= len(menu) // 2]
+        print()
         user_input = input('Выберите пункт меню: ')
         if user_input in menu:
             return user_input
@@ -21,22 +24,23 @@ def get_main_menu() -> str:
     """Get main menu and return the answer."""
     menu = {
         'в': 'список всех книг',
-        'п': 'поиск по книгам',
-        'о': 'сортировать книги',
+        'к': 'поиск по книгам',
+        'т': 'сортировать книги',
         'д': 'добавить книгу',
         'и': 'изменить статус книги',
-        'у': 'удалить книгу',
-        'х': 'выйти',
+        'л': 'удалить книгу',
+        'й': 'выйти',
     }
     return check_menu(menu)
 
 
 def get_list():
-    """Get a library and functions."""
+    """Get a library."""
     Book.get_all()
 
 
 def add_book():
+    """Add a book."""
     author = input('Введите автора: ')
     title = input('Введите наименование: ')
     year = input('Введите год: ')
@@ -58,13 +62,13 @@ def del_book():
 
 
 def search_book():
-    atr = input('Введите поле для поиска (например "автор"): ')
-    text = input('Введите текст поиска (например "Пушкин"): ')
+    atr = input(f'Введите поле для поиска [{", ".join(Book.search_fields)}]: ')
+    text = input('Введите текст поиска (например "Пушкин", "выдана", "2005"): ')
     Book.search_by_param(atr, text)
 
 
 def sort_book():
-    atr = input('Введите поле для поиска (например "автор"): ')
+    atr = input(f'Введите поле сортировки [{", ".join(Book.sort_fields)}]: ')
     by = input(f'По возрастанию или убыванию: {", ".join(Book.sort_by)}: ')
     Book.sort_by_param(atr, by)
 

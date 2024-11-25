@@ -26,6 +26,9 @@
 - Насйтроки : путь + имя файла .
 - Test int year 
 
+расщиряемомсть в списках поиска и сортировки  
+в вплане интерфейса
+
 ## Установка:
 ```
 $ git clone https://github.com/belyashnikovatn/library.git

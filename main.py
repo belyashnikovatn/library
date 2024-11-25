@@ -13,15 +13,16 @@ from view import (
     sort_book
 )
 
+
 # Dictionary of buttons-functions
 menu_actions = {
     'в': get_list,
-    'п': search_book,
-    'о': sort_book,
+    'к': search_book,
+    'т': sort_book,
     'д': add_book,
     'и': edit_book,
-    'у': del_book,
-    'х': get_quit
+    'л': del_book,
+    'й': get_quit
 }
 
 

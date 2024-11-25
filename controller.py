@@ -21,13 +21,15 @@ class Book:
     search_fields = {
         'автор': 'author',
         'наименование': 'title',
-        'год': 'year'
+        'год': 'year',
+        'статус': 'status'
     }
 
     # Fields for sorting: you can add more:
     sort_fields = {
         'автор': 'author',
-        'наименование': 'title'
+        'наименование': 'title',
+        'статус': 'status'
     }
     # Sorting direction:
     sort_by = {
@@ -95,7 +97,7 @@ class Book:
     def get_all(cls) -> None:
         """Print a list of all books."""
         if results := [book for book in Book.library]:
-            print(f'Библиотека. Всего  книг: {len(results)}')
+            print(f'Список книг. Всего: {len(results)}')
             [print(book) for book in results]
             print('---')
             return
@@ -107,7 +109,7 @@ class Book:
     ) -> None:
         """Print a list of all books by parameter."""
         if atr.lower() not in cls.search_fields:
-            print(f'Поля "{atr}" нет. Попробуйте ещё раз')
+            print(f'Поле "{atr}" не доступно для поиска. Попробуйте ещё раз.')
             return
         if results := [book for book in Book.library if getattr(book, cls.search_fields[atr]).lower() == text.lower()]:
             print(f'Результаты поиска по полю "{atr}" по значению "{text}":')
@@ -120,7 +122,7 @@ class Book:
     def sort_by_param(cls, atr, by) -> None:
         """Print a list of all books sorted by parameter."""
         if atr.lower() not in cls.sort_fields:
-            print(f'Поля {atr} нет. Попробуйте ещё раз.')
+            print(f'Поле {atr} не доступно для сортировки. Попробуйте ещё раз.')
             return
         if by.lower() not in cls.sort_by:
             print(f'Аргумента {by} нет. Попробуйте ещё раз.')
@@ -141,11 +143,11 @@ class Book:
         """Remove all books."""
         Book.library.clear()
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return full description of a book."""
         return (
-            f'Книга № {self.id}: '
-            f'под названием "{self.title}" авторства "{self.author}", '
+            f'№ {self.id}: '
+            f'"{self.title}" авторства "{self.author}", '
             f'{self.year} года выпуска сейчас {self.status}')
 
 

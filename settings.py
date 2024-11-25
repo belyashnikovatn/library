@@ -1,5 +1,4 @@
 import logging
-import os
 
 logging.basicConfig(
     format='%(asctime)s - %(funcName)s - %(levelname)s - %(message)s',
