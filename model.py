@@ -4,8 +4,8 @@ Model layer.
 Serialize and deserialize data, load/save into file.
 """
 
-from pathlib import Path
 import json
+from pathlib import Path
 from typing import Union
 
 from settings import logging, STORAGE
@@ -20,7 +20,6 @@ def save_json(books: list[object], file_name: str = STORAGE) -> None:
         logging.debug('Данные успешно сохранены в файл')
     except IOError as e:
         logging.error(f'Ошибка : {e}')
-        return None
 
 
 def load_data(file_name: str = STORAGE) -> Union[list[list], None]:

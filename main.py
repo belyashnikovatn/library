@@ -6,8 +6,8 @@ from view import (
     add_book,
     del_book,
     edit_book,
-    get_main_menu,
     get_list,
+    get_main_menu,
     get_quit,
     search_book,
     sort_book
