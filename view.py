@@ -62,10 +62,10 @@ def add_book() -> None:
             break
         print(f'Год должен быть числом в диапазоне {MIN_YEAR} - {MAX_YEAR}')
     book = Book(title, author, year)
-    print(f'Книга под № {book.id} сохранена!')
+    print(f'Книга под № {book.id} добавлена!')
 
 
-def edit_book():
+def edit_book() -> None:
     """Check input type and edit a book."""
     while True:
         id = input('Введите номер книги: ')
@@ -73,6 +73,9 @@ def edit_book():
             id = int(id)
             break
         print('Введите число!')
+    if not Book.get_by_id(id):
+        print(f'Нет книги под номером {id}.')
+        return
     status = input(
         f'Введите статус из возможных: {", ".join(Book.statuses)}: '
     )
@@ -87,7 +90,10 @@ def del_book() -> None:
             id = int(id)
             break
         print('Введите число!')
-    Book.delete(id)
+    if not Book.get_by_id(id):
+        print(f'Нет книги под номером {id}.')
+    if Book.delete(id):
+        print(f'Книга под номером {id} удалена.')
 
 
 def search_book() -> None:
