@@ -47,7 +47,7 @@ class Book:
         self.author = author
         self.year = year
         self.status = status
-        if id in [book.id for book in Book.library] or id == 0:
+        if not isinstance(id, int) or id in [book.id for book in Book.library] or id == 0:
             self.id = Book._get_next_id()
         else:
             self.id = id
