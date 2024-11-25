@@ -1,8 +1,8 @@
 """
 Controller layer.
 
-All CRUD operations for books: add, delete, change a status, get a list;
-additional: search by parameters, sort by parameters.
+All CRUD operations for books: add, delete, change a status, get a list.
+Additional operations for collection: search by parameters, sort by parameters.
 """
 
 from typing import Union
@@ -38,8 +38,8 @@ class Book:
     }
 
     def __init__(
-            self, title: str, author: str, year: int,
-            id: int = 0,
+            self, title: str, author: str,
+            year: int, id: int = 0,
             status: str = statuses[0]
     ) -> None:
         """Initialize a book and add into the library."""
@@ -104,12 +104,10 @@ class Book:
         print('Библиотека пустая. Сначала добавьте в неё что-нибудь.')
 
     @classmethod
-    def search_by_param(
-        cls, atr, text
-    ) -> None:
+    def search_by_param(cls, atr: str, text: str) -> None:
         """Print a list of all books by parameter."""
         if atr.lower() not in cls.search_fields:
-            print(f'Поле "{atr}" не доступно для поиска. Попробуйте ещё раз.')
+            print(f'Поле "{atr}" не доступно для поиска. Попробуйте иначе.')
             return
         if results := [book for book in Book.library if getattr(book, cls.search_fields[atr]).lower() == text.lower()]:
             print(f'Результаты поиска по полю "{atr}" по значению "{text}":')
@@ -119,13 +117,13 @@ class Book:
         print(f'По полю "{atr}" по значению "{text}" ничего не найдено.')
 
     @classmethod
-    def sort_by_param(cls, atr, by) -> None:
+    def sort_by_param(cls, atr: str, by: str) -> None:
         """Print a list of all books sorted by parameter."""
         if atr.lower() not in cls.sort_fields:
-            print(f'Поле {atr} не доступно для сортировки. Попробуйте ещё раз.')
+            print(f'Поле {atr} не доступно для сортировки. Попробуйте иначе.')
             return
         if by.lower() not in cls.sort_by:
-            print(f'Аргумента {by} нет. Попробуйте ещё раз.')
+            print(f'Аргумента {by} нет. Попробуйте иначе.')
             return
         if results := sorted(Book.library, key=lambda x: getattr(x, cls.sort_fields[atr]).lower(), reverse=cls.sort_by[by]):
             print(f'Книги отсортированы по полю "{atr}" по "{by}":')
@@ -140,7 +138,7 @@ class Book:
 
     @classmethod
     def clean(cls) -> None:
-        """Remove all books."""
+        """Remove all books: for testing or extension."""
         Book.library.clear()
 
     def __str__(self) -> str:
@@ -149,49 +147,3 @@ class Book:
             f'№ {self.id}: '
             f'"{self.title}" авторства "{self.author}", '
             f'{self.year} года выпуска сейчас {self.status}')
-
-
-# Book('Сказки', 'Гоголь', '1952')
-# Book.get_all_by_param(atr='author', text='test')
-# Book.get_all()
-# Book('Сказки', 'Гоголь', '1952')
-# Book('Роман', 'Толстой', '1934')
-# Book('Стихи', 'Пушкин', '1934')
-
-# Book.get_all()
-# Book.sort_by_param('автоывур', 'в')
-# Book.sort_by_param('автор', '23123')
-# Book.sort_by_param('наименование', 'в')
-# Book.sort_by_param('наименование', 'у')
-# Book.sort_by_param('автор', 'у')
-# Book.get_all_by_param(atr='автор', text='test')
-# Book.get_all_by_param(atr='год', text='1934')
-# Book.get_all_by_param(atr='автор', text='гоголь')
-# Book.delete(2)
-# Book.get_all()
-# Book.delete(6)
-
-# Book('Поэма', 'Блок', 1917)
-
-# Book.get_all()
-# print('-------------')
-# Book.get_all_by_param(author='Гоголь')
-# Book.get_all_by_param(author='Г1231оголь')
-
-# test_book = Book('SinnSongs', 'People', 1212)
-# Book.change_status(1, 'ДРУГОЙ')
-# Book.change_status(1, 'в наличии')
-# Book.change_status(1, 'ВЫДАНа')
-# Book.get_all()
-# print([item.value for item in BookStatus])
-# print([item.name for item in BookStatus])
-# def some_function(value: str):
-#     try:
-#         value_atr = getattr(test_book, value)
-#         print (value_atr)
-#     except AttributeError as e:
-#         print(f'This is {e} error')
-
-
-# some_function("title")
-# some_function("title123")
