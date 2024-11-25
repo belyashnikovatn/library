@@ -100,12 +100,17 @@ class Book:
         print('Библиотека пустая. Сначала добавьте в неё что-нибудь.')
 
     @classmethod
-    def search_by_param(cls, atr: str, text: str) -> None:
+    def search_by_param(cls, atr: str, text: Union[str, int]) -> None:
         """Print a list of all books by parameter."""
         if atr.lower() not in cls.search_fields:
             print(f'Поле "{atr}" не доступно для поиска. Попробуйте иначе.')
             return
-        if results := [book for book in Book.library if getattr(book, cls.search_fields[atr]).lower() == text.lower()]:
+        if isinstance(text, str):
+            results = [book for book in Book.library if getattr(book, cls.search_fields[atr]).lower() == text.lower()]
+        if isinstance(text, int):
+            results = [book for book in Book.library if getattr(book, cls.search_fields[atr]) == text]
+
+        if results:
             print(f'Результаты поиска по полю "{atr}" по значению "{text}":')
             [print(book) for book in results]
             print(f'--- найдено всего {len(results)} ---')
@@ -141,5 +146,5 @@ class Book:
         """Return full description of a book."""
         return (
             f'№ {self.id}: '
-            f'"{self.title}" авторства "{self.author}", '
+            f'{self.title} авторства {self.author}, '
             f'{self.year} года выпуска сейчас {self.status}')
