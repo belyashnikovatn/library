@@ -1,35 +1,24 @@
-"""View."""
+"""Main app."""
 
-# from controller import Book
-from model import load_data, save_json
-from view import get_main_menu, get_list
-
-# result = load_data('storage.json')
-# print(result)
-# Book('Остров сокровищ', 'Стивенсон', '1888')
-# Book('Маша и медведи', 'Народные сказки', '1905')
-# Book('Пример', 'Автор', '1905', id=5)
-# Book.get_all()
-# save_json(Book.library)
-# Book.clean()
-# Book.get_all()
-
-# if result := load_data():
-#     [Book(*book) for book in result]
-#     Book.get_all()
-# else:
-#     print('That case')
-#     Book.get_all()
+from view import (
+    add_book,
+    del_book,
+    edit_book,
+    get_main_menu,
+    get_list,
+    get_quit,
+    search_book
+)
 
 
 menu_actions = {
-    'с': get_list,
-    'в': get_main_menu,
-    # 'д': Book,
-    # 'у': Book.delete,
-    # 'и': Book.change_status,
-    # 'п': Book.search_by_param,
-    'х': ''
+    'в': get_list,
+    'п': search_book,
+    'д': add_book,
+    'и': edit_book,
+    'у': del_book,
+    # 'о': ,
+    'х': get_quit
 }
 
 
