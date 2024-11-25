@@ -47,10 +47,10 @@ class Book:
         self.author = author
         self.year = year
         self.status = status
-        if id:
-            self.id = id
-        else:
+        if not isinstance(id, int) or id in [book.id for book in Book.library] or id == 0:
             self.id = Book._get_next_id()
+        else:
+            self.id = id
         Book.library.append(self)
 
     @classmethod
@@ -61,29 +61,25 @@ class Book:
         return max([book.id for book in Book.library]) + 1
 
     @classmethod
-    def _get_by_id(cls, id) -> Union[object, None]:
+    def get_by_id(cls, id) -> Union[object, None]:
         """Find a book by id and return an instance (or None)."""
         if result := [book for book in Book.library if book.id == id]:
             return result[0]
         return None
 
     @classmethod
-    def delete(cls, id: int) -> None:
+    def delete(cls, id: int) -> Union[int, None]:
         """Delete a book by id."""
-        book = Book._get_by_id(id)
+        book = Book.get_by_id(id)
         if book:
             Book.library.remove(book)
-            print(f'Книга под номером {id} удалена.')
-            return
-        print(f'Нет книги под номером {id}.')
+            return id
+        return None
 
     @classmethod
     def change_status(cls, id: int, status: str) -> None:
         """Change a book status by id."""
-        book = Book._get_by_id(id)
-        if not book:
-            print(f'Нет книги под номером {id}.')
-            return
+        book = Book.get_by_id(id)
         if not status.lower() in cls.statuses:
             print(f'Статуса "{status}" нет.')
             return
@@ -109,7 +105,12 @@ class Book:
         if atr.lower() not in cls.search_fields:
             print(f'Поле "{atr}" не доступно для поиска. Попробуйте иначе.')
             return
-        if results := [book for book in Book.library if getattr(book, cls.search_fields[atr]).lower() == text.lower()]:
+        if not text.isnumeric():
+            results = [book for book in Book.library if getattr(book, cls.search_fields[atr]).lower() == text.lower()]
+        else:
+            results = [book for book in Book.library if getattr(book, cls.search_fields[atr]) == int(text)]
+
+        if results:
             print(f'Результаты поиска по полю "{atr}" по значению "{text}":')
             [print(book) for book in results]
             print(f'--- найдено всего {len(results)} ---')
@@ -145,5 +146,5 @@ class Book:
         """Return full description of a book."""
         return (
             f'№ {self.id}: '
-            f'"{self.title}" авторства "{self.author}", '
+            f'{self.title} авторства {self.author}, '
             f'{self.year} года выпуска сейчас {self.status}')
