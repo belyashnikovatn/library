@@ -38,7 +38,7 @@ class Book:
     }
 
     def __init__(
-            self, title: str, author: str, year: str,
+            self, title: str, author: str, year: int,
             id: int = 0,
             status: str = statuses[0]
     ) -> None:

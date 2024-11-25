@@ -9,6 +9,7 @@ from controller import Book
 from model import save_json
 from settings import MAX_YEAR, MIN_YEAR
 
+
 def check_menu(menu: dict) -> str:
     """Check if user's picked a item of a menu."""
     while True:
@@ -37,18 +38,19 @@ def get_main_menu() -> str:
     return check_menu(menu)
 
 
-def get_list():
+def get_list() -> None:
     """Get a library."""
     Book.get_all()
 
 
-def add_book():
-    """Add a book."""
+def add_book() -> None:
+    """Check inputs & add a book."""
     author = input('Введите автора: ')
     title = input('Введите наименование: ')
     while True:
         year = input('Введите год: ')
         if year.isnumeric() and MIN_YEAR < int(year) <= MAX_YEAR:
+            year = int(year)
             break
         print(f'Год должен быть числом в диапазоне {MIN_YEAR} - {MAX_YEAR}')
     book = Book(title, author, year)
