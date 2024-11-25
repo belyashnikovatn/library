@@ -72,7 +72,7 @@ class Book:
         if book:
             Book.library.remove(book)
             print(f'Книга под номером {id} удалена.')
-            return None
+            return
         print(f'Нет книги под номером {id}.')
 
     @classmethod
@@ -81,13 +81,13 @@ class Book:
         book = Book._get_by_id(id)
         if not book:
             print(f'Нет книги под номером {id}.')
-            return None
+            return
         if not status.lower() in cls.statuses:
             print(f'Статуса "{status}" нет.')
-            return None
+            return
         if status.lower() == book.status.lower():
             print(f'У книги под номером {id} уже статус "{status}"')
-            return None
+            return
         book.status = status.lower()
         print(f'Книга под номером {id} теперь "{book.status}"')
 
@@ -98,7 +98,7 @@ class Book:
             print(f'Библиотека. Всего  книг: {len(results)}')
             [print(book) for book in results]
             print('---')
-            return None
+            return
         print('Библиотека пустая. Сначала добавьте в неё что-нибудь.')
 
     @classmethod
@@ -108,12 +108,12 @@ class Book:
         """Print a list of all books by parameter."""
         if atr.lower() not in cls.search_fields:
             print(f'Поля "{atr}" нет. Попробуйте ещё раз')
-            return None
+            return
         if results := [book for book in Book.library if getattr(book, cls.search_fields[atr]).lower() == text.lower()]:
             print(f'Результаты поиска по полю "{atr}" по значению "{text}":')
             [print(book) for book in results]
             print(f'--- найдено всего {len(results)} ---')
-            return None
+            return
         print(f'По полю "{atr}" по значению "{text}" ничего не найдено.')
 
     @classmethod
@@ -121,14 +121,15 @@ class Book:
         """Print a list of all books sorted by parameter."""
         if atr.lower() not in cls.sort_fields:
             print(f'Поля {atr} нет. Попробуйте ещё раз.')
-            return None
+            return
         if by.lower() not in cls.sort_by:
             print(f'Аргумента {by} нет. Попробуйте ещё раз.')
-            return None
+            return
         if results := sorted(Book.library, key=lambda x: getattr(x, cls.sort_fields[atr]).lower(), reverse=cls.sort_by[by]):
             print(f'Книги отсортированы по полю "{atr}" по "{by}":')
             [print(book) for book in results]
             print('---')
+            return
         print('Библиотека пустая. Сначала добавьте в неё что-нибудь.')
 
     def dump(self) -> tuple:

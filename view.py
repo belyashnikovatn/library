@@ -5,7 +5,7 @@ Menus for actions: user pick a menu, make an action, see results.
 """
 
 from controller import Book
-from model import load_data, save_json
+from model import save_json
 
 
 def check_menu(menu: dict) -> str:
@@ -22,6 +22,7 @@ def get_main_menu() -> str:
     menu = {
         'в': 'список всех книг',
         'п': 'поиск по книгам',
+        'о': 'сортировать книги',
         'д': 'добавить книгу',
         'и': 'изменить статус книги',
         'у': 'удалить книгу',
@@ -32,10 +33,7 @@ def get_main_menu() -> str:
 
 def get_list():
     """Get a library and functions."""
-    if result := load_data():
-        [Book(*book) for book in result]
     Book.get_all()
-    get_main_menu()
 
 
 def add_book():
@@ -44,29 +42,31 @@ def add_book():
     year = input('Введите год: ')
     book = Book(title, author, year)
     print(f'Книга под № {book.id} сохранена!')
-    get_main_menu()
 
 
 def edit_book():
     id = int(input('Введите номер книги: '))
     status = input(
-        f'Введите статус из возможных: {", ".join([s for s in Book.statuses])}'
+        f'Введите статус из возможных: {", ".join(Book.statuses)}: '
     )
     Book.change_status(id, status)
-    get_main_menu()
 
 
 def del_book():
     id = int(input('Введите номер книги: '))
     Book.delete(id)
-    get_main_menu()
 
 
 def search_book():
     atr = input('Введите поле для поиска (например "автор"): ')
     text = input('Введите текст поиска (например "Пушкин"): ')
     Book.search_by_param(atr, text)
-    get_main_menu()
+
+
+def sort_book():
+    atr = input('Введите поле для поиска (например "автор"): ')
+    by = input(f'По возрастанию или убыванию: {", ".join(Book.sort_by)}: ')
+    Book.sort_by_param(atr, by)
 
 
 def get_quit() -> bool:
