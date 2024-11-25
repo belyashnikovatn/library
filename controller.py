@@ -21,13 +21,15 @@ class Book:
     search_fields = {
         'автор': 'author',
         'наименование': 'title',
-        'год': 'year'
+        'год': 'year',
+        'статус': 'status'
     }
 
     # Fields for sorting: you can add more:
     sort_fields = {
         'автор': 'author',
-        'наименование': 'title'
+        'наименование': 'title',
+        'статус': 'status'
     }
     # Sorting direction:
     sort_by = {
@@ -36,7 +38,7 @@ class Book:
     }
 
     def __init__(
-            self, title: str, author: str, year: str,
+            self, title: str, author: str, year: int,
             id: int = 0,
             status: str = statuses[0]
     ) -> None:
@@ -72,7 +74,7 @@ class Book:
         if book:
             Book.library.remove(book)
             print(f'Книга под номером {id} удалена.')
-            return None
+            return
         print(f'Нет книги под номером {id}.')
 
     @classmethod
@@ -81,13 +83,13 @@ class Book:
         book = Book._get_by_id(id)
         if not book:
             print(f'Нет книги под номером {id}.')
-            return None
+            return
         if not status.lower() in cls.statuses:
             print(f'Статуса "{status}" нет.')
-            return None
+            return
         if status.lower() == book.status.lower():
             print(f'У книги под номером {id} уже статус "{status}"')
-            return None
+            return
         book.status = status.lower()
         print(f'Книга под номером {id} теперь "{book.status}"')
 
@@ -95,10 +97,10 @@ class Book:
     def get_all(cls) -> None:
         """Print a list of all books."""
         if results := [book for book in Book.library]:
-            print(f'Библиотека. Всего  книг: {len(results)}')
+            print(f'Список книг. Всего: {len(results)}')
             [print(book) for book in results]
             print('---')
-            return None
+            return
         print('Библиотека пустая. Сначала добавьте в неё что-нибудь.')
 
     @classmethod
@@ -107,28 +109,29 @@ class Book:
     ) -> None:
         """Print a list of all books by parameter."""
         if atr.lower() not in cls.search_fields:
-            print(f'Поля "{atr}" нет. Попробуйте ещё раз')
-            return None
+            print(f'Поле "{atr}" не доступно для поиска. Попробуйте ещё раз.')
+            return
         if results := [book for book in Book.library if getattr(book, cls.search_fields[atr]).lower() == text.lower()]:
             print(f'Результаты поиска по полю "{atr}" по значению "{text}":')
             [print(book) for book in results]
             print(f'--- найдено всего {len(results)} ---')
-            return None
+            return
         print(f'По полю "{atr}" по значению "{text}" ничего не найдено.')
 
     @classmethod
     def sort_by_param(cls, atr, by) -> None:
         """Print a list of all books sorted by parameter."""
         if atr.lower() not in cls.sort_fields:
-            print(f'Поля {atr} нет. Попробуйте ещё раз.')
-            return None
+            print(f'Поле {atr} не доступно для сортировки. Попробуйте ещё раз.')
+            return
         if by.lower() not in cls.sort_by:
             print(f'Аргумента {by} нет. Попробуйте ещё раз.')
-            return None
+            return
         if results := sorted(Book.library, key=lambda x: getattr(x, cls.sort_fields[atr]).lower(), reverse=cls.sort_by[by]):
             print(f'Книги отсортированы по полю "{atr}" по "{by}":')
             [print(book) for book in results]
             print('---')
+            return
         print('Библиотека пустая. Сначала добавьте в неё что-нибудь.')
 
     def dump(self) -> tuple:
@@ -140,11 +143,11 @@ class Book:
         """Remove all books."""
         Book.library.clear()
 
-    def __str__(self):
+    def __str__(self) -> str:
         """Return full description of a book."""
         return (
-            f'Книга № {self.id}: '
-            f'под названием "{self.title}" авторства "{self.author}", '
+            f'№ {self.id}: '
+            f'"{self.title}" авторства "{self.author}", '
             f'{self.year} года выпуска сейчас {self.status}')
 
 
